@@ -14,3 +14,11 @@ a.added-book {
 label[for="id_sentence"] {
     display: none;
 }
+
+.row {
+    margin-top: 25px;
+}
+
+button {
+    margin: 15px 0;
+}
