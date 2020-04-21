@@ -1,32 +1,29 @@
+{% extends 'base.html' %}
 {% load static %}
-<html>
-  <head>
-    <title>Notifier</title>
-    <script src="{% static '/channels/js/websocketbridge.js' %}" type="text/javascript"></script>
+{% block content %}
+<div class="container">
+  {% if user.is_authenticated %}
+    <div class="new-bookform">
 
-    <style>
-      a {
-        display: block;
-      }
-    </style>
-
-  </head>
-  <body>
-    <h1>Books</h1>
-    {% if user.is_authenticated %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="btn btn-success">Save</button>
-    </form>
-    {% endif %}
-    <p>Books</p>
-    <div id="booklist">
-      {% for book in books %}
-      <a href="{% url 'book_detail' id=book.id %}">{{ book.title|title }} - ({{ book.player_name|title }})</a>
-      {% endfor %}
+      <form method="post">
+          {% csrf_token %}
+          {{ form }}
+          <button type="submit" class="btn btn-success">Add Book</button>
+      </form>
     </div>
 
+    <hr>
+
+    <div id="booklist">
+      {% for book in books %}
+      <a class="list-group-item list-group-item-action list-group-item-dark added-book" href="{% url 'book_detail' id=book.id %}">{{ book.title|title }} - ({{ book.player_name|title }})</a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <a href="/login"><h2>Login</h2></a>
+    <p>Don't have an account? <a href="/signup">Create one here THANKS</a></p>
+    {% endif %}
+</div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const webSocketBridge = new channels.WebSocketBridge();
@@ -38,7 +35,12 @@
 
                 if(action.event == "New Book") {
                     var link_element = document.createElement("a");
+                    link_element.classList.add("list-group-item");
+                    link_element.classList.add("list-group-item-action");
+                    link_element.classList.add("list-group-item-dark");
+                    link_element.classList.add("added-book");
                     link_element.innerHTML = action.book_name;
+
 
                     book_list.appendChild(link_element);
                     link_element.setAttribute("id", action.book_id);
@@ -48,5 +50,4 @@
             document.ws = webSocketBridge; /* for debugging */
         })
     </script>
-  </body>
-</html>
+{% endblock %}

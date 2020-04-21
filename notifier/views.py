@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
-
+from django.contrib.auth.forms import UserCreationForm
 from notifier.models import *
+from django.contrib.auth import login, authenticate
 
 from .forms import BookForm, SentenceForm
 
 def index(request):
     users = User.objects.all()
-    books = Book.objects.all()
+    books = Book.objects.all().order_by('-id')
 
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -49,3 +50,23 @@ def book_detail(request, id):
     }
 
     return render(request, 'book_detail.html', obj)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+
+    obj = {
+        'form' : form,
+    }
+
+    return render(request, 'registration/signup.html', obj)

@@ -1,0 +1,12 @@
+#booklist {
+    margin-top: 25px;
+}
+
+.new-bookform,
+.sentence-form {
+    margin: 20px 0;
+}
+
+a.added-book {
+    margin-bottom: 10px;
+}
