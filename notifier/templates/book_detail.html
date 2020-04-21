@@ -1,0 +1,48 @@
+{% load static %}
+<html>
+  <head>
+    <title>Notifier</title>
+    <script src="{% static '/channels/js/websocketbridge.js' %}" type="text/javascript"></script>
+  </head>
+  <body>
+    <h1>{{book.title}}</h1>
+    {% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+    {% endif %}
+
+    <p>Sentences</p>
+
+    <div id="sentencelist">
+      {% for sentence in sentences %}
+      <p>{{ sentence.sentence }}</p>
+      {% endfor %}
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded',
+      function() {
+      const webSocketBridge = new channels.WebSocketBridge();
+      const nl = document.querySelector("#sentencelist");
+
+      webSocketBridge.connect('/sentences/');
+      webSocketBridge.listen(function(action, stream) {
+        console.log("RESPONSE:", action);
+
+        if(action.event == "New Sentence") {
+          var el = document.createElement("p");
+
+          el.innerHTML = action.sentence_name;
+
+          nl.appendChild(el);
+
+        }
+      })
+      document.ws = webSocketBridge; /* for debugging */
+    })
+    </script>
+  </body>
+</html>

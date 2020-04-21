@@ -1,0 +1,52 @@
+{% load static %}
+<html>
+  <head>
+    <title>Notifier</title>
+    <script src="{% static '/channels/js/websocketbridge.js' %}" type="text/javascript"></script>
+
+    <style>
+      a {
+        display: block;
+      }
+    </style>
+
+  </head>
+  <body>
+    <h1>Books</h1>
+    {% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+    {% endif %}
+    <p>Books</p>
+    <div id="booklist">
+      {% for book in books %}
+      <a href="{% url 'book_detail' id=book.id %}">{{ book.title|title }} - ({{ book.player_name|title }})</a>
+      {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const webSocketBridge = new channels.WebSocketBridge();
+            const book_list = document.querySelector("#booklist");
+
+            webSocketBridge.connect('/notifications/');
+            webSocketBridge.listen(function(action, stream) {
+                console.log("RESPONSE:", action);
+
+                if(action.event == "New Book") {
+                    var link_element = document.createElement("a");
+                    link_element.innerHTML = action.book_name;
+
+                    book_list.appendChild(link_element);
+                    link_element.setAttribute("id", action.book_id);
+                    document.getElementById(action.book_id).href = "/book/" + action.book_id;
+                }
+            })
+            document.ws = webSocketBridge; /* for debugging */
+        })
+    </script>
+  </body>
+</html>
