@@ -38,6 +38,12 @@ def book_detail(request, id):
             sentence = form.save(commit=False)
             sentence.submitter = request.user
             sentence.book_name = book
+
+            if book.player_name == sentence.submitter:
+                sentence.is_real = True
+            else:
+                sentence.is_real = False
+
             sentence.save()
             return redirect('/book/' + str(book.id))
     else:

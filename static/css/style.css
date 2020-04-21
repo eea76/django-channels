@@ -10,3 +10,7 @@
 a.added-book {
     margin-bottom: 10px;
 }
+
+label[for="id_sentence"] {
+    display: none;
+}

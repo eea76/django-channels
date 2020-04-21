@@ -6,7 +6,11 @@ class BookForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ('title',)
+        fields = ('title',
+            'author',
+            'summary',
+            'publication_date',
+            'genre')
 
 
 class SentenceForm(forms.ModelForm):
