@@ -23,7 +23,6 @@ def announce_new_book(sender, instance, created, **kwargs):
 def announce_new_sentence(sender, instance, created, **kwargs):
     if created:
         channel_layer = get_channel_layer()
-        print(instance.sentence)
 
         async_to_sync(channel_layer.group_send)(
             "announcement", {"type": "sentence.announcement",

@@ -3,29 +3,35 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container">
-  <div class="row">
-  {% if user.is_authenticated %}
-    <div class="new-bookform col-sm-5">
+    <div class="row">
+    {% if user.is_authenticated %}
 
-      <form method="post">
-          {% csrf_token %}
-          {{ form|crispy }}
-          <button type="submit" class="btn btn-success">Add Book</button>
-      </form>
-    </div>
+        <div class="new-bookform col-sm-5">
+            <h4>Add your book here</h4>
+            <form method="post">
+            {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-success">Add Book</button>
+            </form>
+        </div>
 
-    <div class="col-sm-2"></div>
+        <div class="col-sm-2"></div>
 
-    <div id="booklist" class="col-sm-5">
-      {% for book in books %}
-      <a class="list-group-item list-group-item-action list-group-item-dark added-book" href="{% url 'book_detail' id=book.id %}">{{ book.title|title }} - ({{ book.player_name|title }})</a>
-      {% endfor %}
-    </div>
+        <div id="booklist" class="col-sm-5">
+
+            <h4>Books added</h4>
+            {% for book in books %}
+            <a class="list-group-item list-group-item-action list-group-item-dark added-book" href="{% url 'book_detail' id=book.id %}">{{ book.title|title }} - ({{ book.player_name|title }})</a>
+            {% endfor %}
+        </div>
+
     {% else %}
-    <a href="/login"><h2>Login</h2></a>
+
+        <a href="/login"><h2>Login</h2></a>
+
     <p>Don't have an account? <a href="/signup">Create one here THANKS</a></p>
     {% endif %}
-  </div>
+    </div>
 </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -42,6 +48,7 @@
                     link_element.classList.add("list-group-item-action");
                     link_element.classList.add("list-group-item-dark");
                     link_element.classList.add("added-book");
+                    // link_element.innerHTML = action.book_name + ' - (' + action.player_name + ')';
                     link_element.innerHTML = action.book_name;
 
                     book_list.appendChild(link_element);

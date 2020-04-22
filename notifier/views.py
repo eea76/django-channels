@@ -31,6 +31,9 @@ def index(request):
 def book_detail(request, id):
     book = Book.objects.get(id=id)
     sentences = Sentence.objects.filter(book_name=book.id)
+    user_sentence = UserSentence.objects.get_or_create(book=book, user=request.user)
+
+    already_guessed = user_sentence[0].guessed
 
     if request.method == 'POST':
         form = SentenceForm(request.POST)
@@ -39,12 +42,18 @@ def book_detail(request, id):
             sentence.submitter = request.user
             sentence.book_name = book
 
+            user_sentence[0].guessed = True
+
             if book.player_name == sentence.submitter:
                 sentence.is_real = True
             else:
                 sentence.is_real = False
 
             sentence.save()
+            user_sentence[0].save()
+            print("PAY ATTENTION")
+            print(f'{user_sentence} is my sentence')
+            print('^^^^^^^^^^^^^^^^^^^^^^^^^^')
             return redirect('/book/' + str(book.id))
     else:
         form = SentenceForm()
@@ -53,6 +62,7 @@ def book_detail(request, id):
         'book': book,
         'sentences': sentences,
         'form': form,
+        'already_guessed': already_guessed
     }
 
     return render(request, 'book_detail.html', obj)

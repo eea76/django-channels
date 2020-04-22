@@ -35,3 +35,12 @@ class Sentence(models.Model):
 
     def __str__(self):
         return str(self.sentence) + ' - ' + str(self.submitter)
+
+
+class UserSentence(models.Model):
+    book = models.ForeignKey(Book, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    guessed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.user) + ' ' + str(self.book)
