@@ -22,8 +22,11 @@
             <div class="sentence-form">
                 {% if already_guessed %}
                 <p>Thanks for submitting your sentence!</p>
+
                 <hr>
+
                 {% else %}
+
                 {% if request.user == book.player_name %}
                 <p>Enter the real sentence for {{book.title}}</p>
                 {% else %}
@@ -41,7 +44,20 @@
 
             <div id="sentencelist">
                 {% for sentence in sentences %}
+
+                {% if sentence.submitter == request.user %}
+                <p class="list-group-item list-group-item-success">{{ sentence.sentence }} (You)</p>
+
+                {% elif request.user == book.player_name %}
+
+                <p class="list-group-item list-group-item-success">{{ sentence.sentence }} ({{sentence.submitter|title}})</p>
+
+                {% else %}
+
                 <p class="list-group-item list-group-item-success">{{ sentence.sentence }}</p>
+
+                {% endif %}
+
                 {% endfor %}
             </div>
         </div>

@@ -32,7 +32,6 @@ def book_detail(request, id):
     book = Book.objects.get(id=id)
     sentences = Sentence.objects.filter(book_name=book.id)
     user_sentence = UserSentence.objects.get_or_create(book=book, user=request.user)
-
     already_guessed = user_sentence[0].guessed
 
     if request.method == 'POST':
@@ -51,9 +50,6 @@ def book_detail(request, id):
 
             sentence.save()
             user_sentence[0].save()
-            print("PAY ATTENTION")
-            print(f'{user_sentence} is my sentence')
-            print('^^^^^^^^^^^^^^^^^^^^^^^^^^')
             return redirect('/book/' + str(book.id))
     else:
         form = SentenceForm()
