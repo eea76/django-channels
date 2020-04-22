@@ -1,10 +1,10 @@
 # old version of this file
 
 import os
-import channels
+from channels.layers import get_channel_layer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "channelsproj.settings")
-channel_layer = channels.asgi.get_channel_layer()
+channel_layer = get_channel_layer()
 
 ########################
 
