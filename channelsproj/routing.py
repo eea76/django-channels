@@ -3,6 +3,7 @@ from django.urls import path, re_path
 from notifier.consumers import NoseyConsumer, SentenceConsumer
 from channels.http import AsgiHandler
 
+
 application = ProtocolTypeRouter({
     "websocket": URLRouter([
         path("notifications/", NoseyConsumer),
